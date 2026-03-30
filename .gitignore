@@ -13,5 +13,3 @@ wandb/
 .ipynb_checkpoints/
 data/
 checkpoints/
-configs/
-resources/dictionaries/
