@@ -1,0 +1,50 @@
+seed: 42
+device: auto
+
+wandb:
+  enabled: false
+  project: "[TOXHABITS] I-NOWJ"
+  run_name: "self-training"
+
+data:
+  gold_train_trigger_csv: ../data/processed/train/csv/train_triggers_tagging.csv
+  gold_train_arg_csv: ../data/processed/train/csv/train_args_tagging.csv
+
+  aug_trigger_csv: ../data/processed/aug/train_triggers_tagging.csv
+  aug_arg_csv: ../data/processed/aug/train_args_tagging.csv
+
+  test_trigger_csv: ../data/processed/test/csv/test_triggers_tagging.csv
+  test_arg_csv: ../data/processed/test/csv/test_args_tagging.csv
+
+resources:
+  trigger_dict_json: ../resources/dictionaries/trigger_dict.json
+  argument_dict_json: ../resources/dictionaries/argument_dict.json
+
+self_training:
+  num_iterations: 1
+  baseline_epochs: 1
+  iter1_epochs: 2
+  iter2_epochs: 2
+  require_agreement: true
+  output_dir: ../outputs/self_training_results
+  init_checkpoint_path: ../checkpoints/inowj_model.pt
+
+model:
+  pretrained_name: dccuchile/bert-base-spanish-wwm-cased
+  lstm_hidden_size: 256
+  lstm_num_layers: 2
+  lstm_dropout: 0.2
+  bidirectional: true
+  dict_feat_dim: 10
+  dict_mlp_out_dim: 128
+
+optimizer:
+  bert_lr: 2.0e-5
+  lstm_lr: 5.0e-4
+  clf_lr: 1.0e-3
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  max_grad_norm: 1.0
+
+evaluation:
+  gold_dir: ../data/processed/test/json
